@@ -1,6 +1,6 @@
 ## AWS resource counter
 
-This project creates Amazon CloudWatch metric for configured resources using AWS Lambda	that is scheduled recurrency.  
+This project creates Amazon CloudWatch metric for configured resources using AWS Lambda that is scheduled recurrence.  
 You can configure which resources you would like to count and Lambda function will generate the metric based on your current resources count.  
 It will allow you to keep track of your resource numbers and also generate alarm using CloudWatch alarm.  
 Including [anomaly detection](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html) alarm, which can be used to alarm you when your AWS resources usage is different from your baseline.
