@@ -1,0 +1,591 @@
+defaultNamespace: ResourceCounter
+defaultDimensionName: Per-Service Metrics
+resources:
+## EC2
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_instances
+    iterateOver: [Reservations, Instances]
+  count:
+    groupBy:
+      element: [State, Name]
+      values: [running, terminated, stopped]
+  metric:
+    dimensionValue: EC2
+    metricName: Instance
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_images
+    kwargs:
+      Owners:
+        - self
+    iterateOver: [Images]
+  count:
+    groupBy:
+      element: [State]
+  metric:
+    dimensionValue: EC2
+    metricName: Image
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_volumes
+    iterateOver: [Volumes]
+  count:
+    groupBy:
+      element: [State]
+      values: [available, in-use, deleted, error]
+  metric:
+    dimensionValue: EC2
+    metricName: Volume
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_snapshots
+    kwargs:
+      OwnerIds:
+        - self
+    iterateOver: [Snapshots]
+  count:
+    groupBy:
+      element: [State]
+      values: [completed, error, recoverable]
+  metric:
+    dimensionValue: EC2
+    metricName: Snapshot
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_security_groups
+    iterateOver: [SecurityGroups]
+  metric:
+    dimensionValue: EC2
+    metricName: SecurityGroup
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_network_interfaces
+    iterateOver: [NetworkInterfaces]
+  count:
+    groupBy:
+      element: [Status]
+      values: [available, associated, in-use]
+  metric:
+    dimensionValue: EC2
+    metricName: NetworkInterface
+- type: direct
+  resource:
+    client: ec2
+    method: describe_addresses
+    iterateOver: [Addresses]
+  count:
+    ifExists:
+      element: AssociationId
+      existsSuffix: In-use
+      notExistsSuffix: Available
+  metric:
+    dimensionValue: EC2
+    metricName: Elastic-IP
+- type: direct
+  resource:
+    client: ec2
+    method: describe_key_pairs
+    iterateOver: [KeyPairs]
+  count:
+    groupBy:
+      element: [KeyType]
+    ifExists:
+      element: AssociationId
+      existsSuffix: In-use
+      notExistsSuffix: Available
+  metric:
+    dimensionValue: EC2
+    metricName: KeyPair
+
+## ELB Classic
+- type: paginator
+  resource:
+    client: elb
+    method: describe_load_balancers
+    iterateOver: [LoadBalancerDescriptions]
+  metric:
+    dimensionValue: ELB
+    metricName: ELB-Classic
+
+## ELBv2
+- type: paginator
+  resource:
+    client: elbv2
+    method: describe_load_balancers
+    iterateOver: [LoadBalancers]
+  count:
+    groupBy:
+      element: [Type]
+  metric:
+    dimensionValue: ELB
+    metricName: ELB
+
+## Autoscaling
+- type: paginator
+  resource:
+    client: autoscaling
+    method: describe_auto_scaling_groups
+    iterateOver: [AutoScalingGroups]
+  metric:
+    dimensionValue: EC2
+    metricName: AutoScalingGroup
+
+## VPC
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_vpcs
+    iterateOver: [Vpcs]
+  metric:
+    dimensionValue: VPC
+    metricName: Vpc
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_subnets
+    iterateOver: [Subnets]
+  metric:
+    dimensionValue: VPC
+    metricName: Subnet
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_route_tables
+    iterateOver: [RouteTables]
+  metric:
+    dimensionValue: VPC
+    metricName: RouteTable
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_internet_gateways
+    iterateOver: [InternetGateways]
+  count:
+    groupBy:
+      element: [Attachments]
+      values: [attached, detached]
+  metric:
+    dimensionValue: VPC
+    metricName: InternetGateway
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_egress_only_internet_gateways
+    iterateOver: [EgressOnlyInternetGateways]
+  metric:
+    dimensionValue: VPC
+    metricName: EgressOnlyInternetGateway
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_managed_prefix_lists
+    iterateOver: [PrefixLists]
+  metric:
+    dimensionValue: VPC
+    metricName: PrefixList
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_vpc_endpoints
+    iterateOver: [VpcEndpoints]
+  count:
+    groupBy:
+      element: [VpcEndpointType]
+  metric:
+    dimensionValue: VPC
+    metricName: VpcEndpoint
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_vpc_endpoint_connections
+    iterateOver: [VpcEndpointConnections]
+  metric:
+    dimensionValue: VPC
+    metricName: VpcEndpointConnection
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_nat_gateways
+    iterateOver: [NatGateways]
+  count:
+    groupBy:
+      element: [State]
+      values: [failed, available, deleted]
+  metric:
+    dimensionValue: VPC
+    metricName: NatGateway
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_vpc_peering_connections
+    iterateOver: [VpcPeeringConnections]
+  metric:
+    dimensionValue: VPC
+    metricName: VpcPeeringConnection
+
+
+### Network ACL
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_network_acls
+    iterateOver: [NetworkAcls]
+  metric:
+    dimensionValue: VPC
+    metricName: NetworkAcl
+
+### VPN
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_client_vpn_endpoints
+    iterateOver: [ClientVpnEndpoints]
+  count:
+    groupBy:
+      element: [Status, Code]
+      values: [pending-associate, available, deleted]
+  metric:
+    dimensionValue: VPC
+    metricName: ClientVpnEndpoint
+- type: direct
+  resource:
+    client: ec2
+    method: describe_customer_gateways
+    iterateOver: [CustomerGateways]
+  metric:
+    dimensionValue: VPC
+    metricName: CustomerGateway
+- type: direct
+  resource:
+    client: ec2
+    method: describe_vpn_gateways
+    iterateOver: [VpnGateways]
+  metric:
+    dimensionValue: VPC
+    metricName: VpnGateway
+- type: direct
+  resource:
+    client: ec2
+    method: describe_vpn_connections
+    iterateOver: [VpnConnections]
+  metric:
+    dimensionValue: VPC
+    metricName: VpnConnection
+
+### TGW
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_transit_gateways
+    iterateOver: [TransitGateways]
+  metric:
+    dimensionValue: VPC
+    metricName: TransitGateway
+- type: paginator
+  resource:
+    client: ec2
+    method: describe_transit_gateway_attachments
+    iterateOver: [TransitGatewayAttachments]
+  metric:
+    dimensionValue: VPC
+    metricName: TransitGatewayAttachment
+
+## IAM
+- type: paginator
+  resource:
+    client: iam
+    method: list_groups
+    iterateOver: [Groups]
+  metric:
+    dimensionValue: IAM
+    metricName: Group
+- type: paginator
+  resource:
+    client: iam
+    method: list_users
+    iterateOver: [Users]
+  metric:
+    dimensionValue: IAM
+    metricName: User
+- type: paginator
+  resource:
+    client: iam
+    method: list_roles
+    iterateOver: [Roles]
+  metric:
+    dimensionValue: IAM
+    metricName: Role
+- type: paginator
+  resource:
+    client: iam
+    method: list_policies
+    kwargs:
+      Scope: Local
+    iterateOver: [Policies]
+  count:
+    ifExists:
+      element: 'AttachmentCount'
+      existsSuffix: 'Attached'
+      notExistsSuffix: 'NotAttached'
+  metric:
+    dimensionValue: IAM
+    metricName: Policy
+- type: direct
+  resource:
+    client: iam
+    method: list_saml_providers
+    iterateOver: [SAMLProviderList]
+  metric:
+    dimensionValue: IAM
+    metricName: SAMLProvider
+
+## RDS
+- type: paginator
+  resource:
+    client: rds
+    method: describe_db_clusters
+    iterateOver: [DBClusters]
+  metric:
+    dimensionValue: RDS
+    metricName: DBCluster
+- type: paginator
+  resource:
+    client: rds
+    method: describe_db_instances
+    iterateOver: [DBInstances]
+  metric:
+    dimensionValue: RDS
+    metricName: DBInstance
+- type: paginator
+  resource:
+    client: rds
+    method: describe_db_cluster_snapshots
+    kwargs:
+      IncludeShared: false
+      IncludePublic: false
+    iterateOver: [DBClusterSnapshots]
+  count:
+    groupBy:
+      element: [SnapshotType]
+  metric:
+    dimensionValue: RDS
+    metricName: DBClusterSnapshot
+- type: paginator
+  resource:
+    client: rds
+    method: describe_db_snapshots
+    kwargs:
+      IncludeShared: false
+      IncludePublic: false
+    iterateOver: [DBSnapshots]
+  count:
+    groupBy:
+      element: [SnapshotType]
+  metric:
+    dimensionValue: RDS
+    metricName: DBSnapshot
+- type: paginator
+  resource:
+    client: rds
+    method: describe_db_instance_automated_backups
+    iterateOver: [DBInstanceAutomatedBackups]
+  metric:
+    dimensionValue: RDS
+    metricName: DBInstanceAutomatedBackup
+- type: paginator
+  resource:
+    client: rds
+    method: describe_db_proxies
+    iterateOver: [DBProxies]
+  metric:
+    dimensionValue: RDS
+    metricName: DBProxie
+
+## KMS
+- type: paginator
+  resource:
+    client: kms
+    method: list_aliases
+    iterateOver: [Aliases]
+  metric:
+    dimensionValue: KMS
+    metricName: Alias
+- type: paginator
+  resource:
+    client: kms
+    method: list_keys
+    iterateOver: [Keys]
+  metric:
+    dimensionValue: KMS
+    metricName: Key
+
+## SNS
+- type: paginator
+  resource:
+    client: sns
+    method: list_topics
+    iterateOver: [Topics]
+  metric:
+    dimensionValue: SNS
+    metricName: Topic
+
+## SQS
+- type: paginator
+  resource:
+    client: sqs
+    method: list_queues
+    iterateOver: [QueueUrls]
+    mustExists: false
+  metric:
+    dimensionValue: SQS
+    metricName: Queue
+
+## Lambda
+- type: paginator
+  resource:
+    client: lambda
+    method: list_functions
+    iterateOver: [Functions]
+  metric:
+    dimensionValue: Lambda
+    metricName: Function
+
+## CloudTrail
+- type: paginator
+  resource:
+    client: cloudtrail
+    method: list_trails
+    iterateOver: [Trails]
+  metric:
+    dimensionValue: CloudTrail
+    metricName: Trail
+
+## EventBridge
+- type: paginator
+  resource:
+    client: events
+    method: list_rules
+    iterateOver: [Rules]
+  count:
+    groupBy:
+      element: [State]
+  metric:
+    dimensionValue: EventBridge
+    metricName: Rule
+
+## CloudWatch
+- type: paginator
+  resource:
+    client: cloudwatch
+    method: describe_alarms
+    iterateOver: [MetricAlarms]
+  metric:
+    dimensionValue: CloudWatch
+    metricName: Alarm
+
+## Config
+- type: paginator
+  resource:
+    client: config
+    method: describe_config_rules
+    iterateOver: [ConfigRules]
+  metric:
+    dimensionValue: Config
+    metricName: Rule
+
+## DynamoDB
+- type: paginator
+  resource:
+    client: dynamodb
+    method: list_tables
+    iterateOver: [TableNames]
+  metric:
+    dimensionValue: DynamoDB
+    metricName: Table
+- type: paginator
+  resource:
+    client: dynamodb
+    method: list_backups
+    iterateOver: [BackupSummaries]
+  metric:
+    dimensionValue: DynamoDB
+    metricName: Backup
+
+## Glacier
+- type: paginator
+  resource:
+    client: glacier
+    method: list_vaults
+    iterateOver: [VaultList]
+  metric:
+    dimensionValue: Glacier
+    metricName: Vault
+
+## WAFv2
+- type: next-in-response
+  resource:
+    client: wafv2
+    method: list_web_acls
+    kwargs:
+      Scope: REGIONAL
+    iterateOver: [WebACLs]
+    nextInRequest: NextMarker
+    nextInResponse: NextMarker
+  metric:
+    dimensionValue: WAFv2
+    metricName: WebACL
+- type: next-in-response
+  resource:
+    client: wafv2
+    method: list_ip_sets
+    kwargs:
+      Scope: REGIONAL
+    iterateOver: [IPSets]
+    nextInRequest: NextMarker
+    nextInResponse: NextMarker
+  metric:
+    dimensionValue: WAFv2
+    metricName: IPSet
+
+### S3
+- type: direct
+  resource:
+    client: s3
+    method: list_buckets
+    iterateOver: [Buckets]
+  metric:
+    dimensionValue: S3
+    metricName: Bucket
+
+### CloudFormation
+- type: paginator
+  resource:
+    client: cloudformation
+    method: list_stacks
+    iterateOver: [StackSummaries]
+  metric:
+    dimensionValue: CloudFormation
+    metricName: Stack
+- type: paginator
+  resource:
+    client: cloudformation
+    method: list_stack_sets
+    iterateOver: [Summaries]
+  metric:
+    dimensionValue: CloudFormation
+    metricName: StackSet
+- type: paginator
+  resource:
+    client: cloudformation
+    method: list_exports
+    iterateOver: [Exports]
+  metric:
+    dimensionValue: CloudFormation
+    metricName: Export
