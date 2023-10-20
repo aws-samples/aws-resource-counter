@@ -4,7 +4,7 @@ On an hybrid environment customer announce route prefix from on-premise to AWS u
 Each service has BGP quotas, like [AWS Direct Connect](https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html), [AWS Site-to-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html).  
 If customer announce more routes than it is allowes, BGP turns down.
 
-With this solution you can have a Cloud Watch Metric for each type of BGP propagation and create alarm with some specific threadsold to be aware when your are reaching the allowed quota.
+With this solution you can have a Cloud Watch Metric for each type of BGP propagation and create alarm with some specific threshold to be aware when your are reaching the allowed quota.
 
 As all configurations below requires some specific `route table id` that belogg to customer environment, I did add if by default on this solution configuration.  
 So, please, change the configuration to your specific `route table id`.

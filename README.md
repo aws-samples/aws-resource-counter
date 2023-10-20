@@ -56,6 +56,10 @@ You don't need to change the file to just see the project deployed and metrics o
 
 For more details, check [how to use `services.json`](/configuration.md) configuration file.
 
+> **ROUTE PROPAGATION**  
+> If you want to monitor and alarm route propagation from AWS Direct Connect and/or AWS Site-to-Site VPN, check [how to configure it](/route-propagation.md).
+
+
 ## Setup
 
 These are the overall steps to deploy:
@@ -126,10 +130,6 @@ aws lambda update-function-code --function-name "${FUNCTION_NAME}" --zip-file fi
 > **NOTE**  
 > Every time you change Lambda function configuration file `services.json` you need to execute steps 3 and 4 again.  
 > You also need to confirm if Lambda execution role has the correct permission to execute the methods defined on configuration file.
-
-**Route Propagation**  
-If you want to monitor and alarm route propagation from AWS Direct Connect and/or AWS Site-to-Site VPN, check [how to configure it](/route-propagation.md).
-
 
 
 ## After setup
