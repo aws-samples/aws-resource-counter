@@ -56,8 +56,8 @@ You don't need to change the file to just see the project deployed and metrics o
 
 For more details, check [how to use `services.json`](/configuration.md) configuration file.
 
-> **ROUTE PROPAGATION**  
-> If you want to monitor and alarm route propagation from AWS Direct Connect and/or AWS Site-to-Site VPN, check [how to configure it](/route-propagation.md).
+**ROUTE PROPAGATION**  
+If you want to monitor and alarm route propagation from AWS Direct Connect and/or AWS Site-to-Site VPN, check [how to configure it](/route-propagation.md).
 
 
 ## Setup
