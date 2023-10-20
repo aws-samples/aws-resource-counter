@@ -65,7 +65,7 @@ resources:
     kwargs: {}
 
     # List of strings with attributes from Boto3 method response to be used to iterate and count.
-    # It must be an List attribute to interate over. It will iterate on the order specified.
+    # It must be a List attribute to interate over. It will iterate on the order specified.
     # Value is case sensitive!
     iterateOver: [Reservations, Instances]
 
@@ -92,7 +92,7 @@ resources:
   # It is optional! If it is not defined it will assume all default values.
   count:
 
-    # Boolean value to indicate if it shoud generate a total count metric for this resource or not.
+    # Boolean value to indicate if it should generate a total count metric for this resource or not.
     # It is optional! The default value is "true".
     generateTotal: true
 
@@ -107,6 +107,7 @@ resources:
       #
       # The metric name will be the one defined on attribute "metricName" below with a suffix that is the value from this "element" attribute.
       # Like, "element: [State]" and "metricName: Instance"  has a value "running", metric name will be "Instance-Running".
+      # You can change this metric name behavior using "customName" below.
       element: [State, Name]
 
       # List of strings with attribute values from "method" response "element" above.
@@ -116,7 +117,12 @@ resources:
       # It is optional! If not defined it will group and count based on all values from "element" above.
       values: [running, terminated, stopped]
 
-      # Boolean value to indicate if it shoud capitalize the attribute value define above on "element".
+      # Boolean value to indicate if it should generate custom metric name based on values attribute define above.
+      # It is optional! The default value is "true".
+      # This is useful when you use groupBy to filter by just one element value and don't what the value to be appended on metric name.
+      customName: true
+
+      # Boolean value to indicate if it should capitalize the attribute value define above on "element".
       # It is optional! The default value is "true".
       # Examples: "AVAILABLE" -> "Available", "in-use" -> "In-use"
       capitalize: true

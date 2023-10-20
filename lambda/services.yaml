@@ -230,7 +230,6 @@ resources:
     dimensionValue: VPC
     metricName: VpcPeeringConnection
 
-
 ### Network ACL
 - type: paginator
   resource:

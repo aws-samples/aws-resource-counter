@@ -91,6 +91,7 @@ class GroupByElement(TypedDict):
     element: list[str]
     values: list[str]
     capitalize: bool
+    customName: bool
 
 class IfExistsElement(TypedDict):
     """
@@ -306,6 +307,7 @@ def get_metric_count_from_group_by(resources: list[Any], config_service: Resourc
     group_by: list[str] = config_service['count']['groupBy']['element']
     group_by_values: list[str] = config_service['count']['groupBy'].get('values', [])
     capitalize: bool = config_service['count']['groupBy']['capitalize']
+    custom_name: bool = config_service['count']['groupBy']['customName']
     metric_count: MetricCount = {}
 
     for resource in resources:
@@ -318,9 +320,16 @@ def get_metric_count_from_group_by(resources: list[Any], config_service: Resourc
                 logging.info('Attribute value "%s" not in group_by_values "%s"', attribute_value, group_by_values)
                 continue
 
-        # Define the metric name to add based on groupBy attribute value
+        # Define the metric name to add based on groupBy attribute value and customName attribute
         # It captilize the attribute value if defined on configuration
-        if (metric_to_add := f'{metric_name}-{str(attribute_value).capitalize()}' if capitalize else f'{metric_name}-{attribute_value}') not in metric_count:
+        if not custom_name:
+            metric_to_add = metric_name
+        elif capitalize:
+            metric_to_add = f'{metric_name}-{str(attribute_value).capitalize()}'
+        else:
+            metric_to_add = f'{metric_name}-{attribute_value}'
+        #if (metric_to_add := f'{metric_name}-{str(attribute_value).capitalize()}' if capitalize else f'{metric_name}-{attribute_value}') not in metric_count:
+        if metric_to_add not in metric_count:
             metric_count[metric_to_add] = 0
         metric_count[metric_to_add] += 1
 
@@ -447,7 +456,7 @@ def get_service_configuration() -> list[ResourceConfiguration]:
 
                 resource_count_element = CountElement(
                     generateTotal=True,
-                    groupBy=GroupByElement(element=[], values=[], capitalize=True),
+                    groupBy=GroupByElement(element=[], values=[], capitalize=True, customName=True),
                     ifExists=IfExistsElement(element='', existsSuffix='', notExistsSuffix='')
                 )
                 if CONST_COUNT in resource:
@@ -456,7 +465,8 @@ def get_service_configuration() -> list[ResourceConfiguration]:
                         resource_count_element['groupBy'] = GroupByElement(
                             element=resource[CONST_COUNT][CONST_GROUP_BY]['element'],
                             values=resource[CONST_COUNT][CONST_GROUP_BY].get('values', []),
-                            capitalize=resource[CONST_COUNT][CONST_GROUP_BY].get('capitalize', True)
+                            capitalize=resource[CONST_COUNT][CONST_GROUP_BY].get('capitalize', True),
+                            customName=resource[CONST_COUNT][CONST_GROUP_BY].get('customName', True)
                         )
                     if CONST_IF_EXISTS in resource[CONST_COUNT]:
                         resource_count_element['ifExists'] = IfExistsElement(

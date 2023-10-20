@@ -17,7 +17,7 @@ Metrics are created in the region where the CloudFormation stack is created.
 
 The CloudFormation template `cloudformation/template.yml` creates a stack with the following resources:
 
-1. AWS Lambda function with customizable config file called `services.json`. The function's code is in `lambda/resource_counter.py` and is written in Python compatible with version 3.10.
+1. AWS Lambda function with customizable config file called `services.json`. The function's code is in `lambda/resource_counter.py` and is written in Python compatible with version 3.11.
 1. Lambda function's execution role.
 1. Amazon EventBridge schedule to execute Lambda function.
 
@@ -127,6 +127,8 @@ aws lambda update-function-code --function-name "${FUNCTION_NAME}" --zip-file fi
 > Every time you change Lambda function configuration file `services.json` you need to execute steps 3 and 4 again.  
 > You also need to confirm if Lambda execution role has the correct permission to execute the methods defined on configuration file.
 
+**Route Propagation**  
+If you want to monitor and alarm route propagation from AWS Direct Connect and/or AWS Site-to-Site VPN, check [how to configure it](/route-propagation.md).
 
 
 
@@ -176,7 +178,7 @@ unset CFN_STACK_NAME
 
 > **ATTENTION**  
 > When you remove CloudFormation stack, it will NOT remove CloudWatch metrics created by this solution.  
-> If you want to remove it, you need to do wait until CloudWatch metrics retention policy time.
+> If you want to remove it, you need to wait until CloudWatch metrics retention policy time.
 
 ## Lambda function customization
 
