@@ -39,7 +39,7 @@ Resources:
       Handler: 'resource_counter.lambda_handler'
       MemorySize: 256
       Role: !GetAtt 'LambdaIamRole.Arn'
-      Runtime: python3.11
+      Runtime: python3.12
       Timeout: 300
       ReservedConcurrentExecutions: 2
       Code:

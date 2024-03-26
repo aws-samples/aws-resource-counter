@@ -6,7 +6,7 @@ If customer announce more routes than it is allowed, BGP turns down.
 
 With this solution you can have a Cloud Watch Metric for each type of BGP propagation and create alarm with some specific threshold to be aware when you are reaching the allowed quota.
 
-As all configurations below requires some specific `route table id` that belong to customer environment, I did add if by default on this solution configuration.  
+As all configurations below requires some specific `route table id` that belong to customer environment, I didn't add it by default on this solution configuration.  
 So, please, change the configuration to your specific `route table id`.
 
 ## VPN and Private VIF with Virtual Private Gateway (VGW)

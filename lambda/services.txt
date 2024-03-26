@@ -1,7 +1,4 @@
->>> import boto3
->>> for service in sorted(boto3.session.Session().get_available_services()):
-...   print(service)
-...
+echo -e 'import boto3\nfor service in sorted(boto3.session.Session().get_available_services()):\n   print(service)\n\n' | python3
 accessanalyzer
 account
 acm
