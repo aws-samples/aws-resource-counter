@@ -17,7 +17,7 @@ Metrics are created in the region where the CloudFormation stack is created.
 
 The CloudFormation template `cloudformation/template.yml` creates a stack with the following resources:
 
-1. AWS Lambda function with customizable config file called `services.json`. The function's code is in `lambda/resource_counter.py` and is written in Python compatible with version 3.11.
+1. AWS Lambda function with customizable config file called `services.json`. The function's code is in `lambda/resource_counter.py` and is written in Python compatible with version 3.12.
 1. Lambda function's execution role.
 1. Amazon EventBridge schedule to execute Lambda function.
 
